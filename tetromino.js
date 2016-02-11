@@ -137,7 +137,6 @@ function loader (grid) {
         this.position.y += 1;
       } else {
         this.fill();
-        grid.update();
         return false;
       }
       return true;

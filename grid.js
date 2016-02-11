@@ -29,12 +29,15 @@ grid.moveDown = function (rowsAmount) {
   });
 };
 grid.update = function () {
+  var removedRows = 0;
   for (var i = 0; i < 22; ++i) {
     if (this.getRow(i).length == 10) {
+      ++removedRows;
       this.removeRow(i);
       this.moveDown(i);
     }
   }
+  return removedRows;
 };
 grid.clear = function () {
   this.bricks = new Array();

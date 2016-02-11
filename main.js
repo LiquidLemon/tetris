@@ -5,7 +5,7 @@ var game = require("./game.js");
 window.addEventListener("keydown", function (event) {
   if (event.defaultPrevented)
     return;
-  if (game.over) {
+  if (game.over && event.code == "KeyR") {
     game.restart();
     game.over = false;
   } else {
