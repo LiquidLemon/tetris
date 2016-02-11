@@ -32,29 +32,32 @@ game.draw = function () {
     this.tetromino.bricks.forEach(function (brick) {
       this.context.fillRect((this.tetromino.position.x+brick.position.x)*16,(this.tetromino.position.y+brick.position.y)*16,16,16);
     }, this);
+    document.getElementById("score").innerHTML = "Your score is: " + this.score;
   } else {
     this.context.fillStyle = "black";
     var text = [
       "Press \"R\" to restart",
-      "Your score: " + this.score
+      "Score: " + this.score
     ];
     text.forEach(function (string, index) {
       this.context.fillText(string, this.canvas.width / 2, this.canvas.height * ((index + 1) / (text.length + 1)));
     }, this);
   }
 };
+game.getInterval = function () {
+  return 1000 - this.score * 4;
+};
 
 game.restart = function () {
   this.over = false;
   this.score = 0;
-  this.interval = 1000;
   this.grid.clear();
   this.tetromino = new Tetromino();
   window.setTimeout(function step(game) {
     game.moveDown();
     if(!game.over) 
-      window.setTimeout(step, game.interval, game);
+      window.setTimeout(step, game.getInterval(), game);
     game.draw();
-  }, this.interval, this);
+  }, this.getInterval(), this);
 };
 module.exports = game;

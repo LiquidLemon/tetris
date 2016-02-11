@@ -1,15 +1,16 @@
 {
   "name": "tetris",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A simple tetris clone",
   "main": "entry.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "LiquidLemon",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "css-loader": "^0.23.1",
-    "style-loader": "^0.13.0"
+    "style-loader": "^0.13.0",
+    "webpack": "^1.12.13"
   }
 }
