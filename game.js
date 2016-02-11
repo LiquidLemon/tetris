@@ -2,8 +2,6 @@ var game = {};
 
 game.grid = require("./grid.js");
 var Tetromino = require("./tetromino.js")(game.grid);
-game.tetromino = new Tetromino();
-game.over = false;
 
 game.canvas = document.getElementById('display');
 if (game.canvas.getContext) {
@@ -11,11 +9,6 @@ if (game.canvas.getContext) {
   game.context.font = "16px sans-serif";
   game.context.textAlign = "center";
 }
-game.restart = function () {
-  this.over = false;
-  this.grid.clear();
-  this.tetromino = new Tetromino();
-};
 
 game.moveDown = function () {
   if (!this.tetromino.moveDown()) {
@@ -39,7 +32,22 @@ game.draw = function () {
       this.context.fillRect((this.tetromino.position.x+brick.position.x)*16,(this.tetromino.position.y+brick.position.y)*16,16,16);
     }, this);
   } else {
+    this.context.fillStyle = "black";
     this.context.fillText("Press any key to restart", this.canvas.width / 2, this.canvas.height / 2);
   }
+};
+
+game.restart = function () {
+  this.over = false;
+  this.interval = 1000;
+  this.grid.clear();
+  this.tetromino = new Tetromino();
+  window.setTimeout(function step(game) {
+    console.log("timeout");
+    game.moveDown();
+    if(!game.over) 
+      window.setTimeout(step, game.interval, game);
+    game.draw();
+  }, this.interval, this);
 };
 module.exports = game;

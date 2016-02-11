@@ -30,11 +30,5 @@ window.addEventListener("keydown", function (event) {
   event.preventDefault();
 }, true);
 
-window.setTimeout(function timeout () {
-  game.moveDown();
-  if (!game.over)
-    window.setTimeout(timeout, 1000);
-  game.draw();
-}, 1000);
-
+game.restart();
 game.draw();
