@@ -1,39 +1,40 @@
 require("./index.css");
-var draw = require("./draw.js");
-var tetrominoLoader = require("./tetromino.js");
 
-var grid = require("./grid.js");
-var Tetromino = tetrominoLoader(grid);
-var tetromino = new Tetromino();
+var game = require("./game.js");
+
 window.addEventListener("keydown", function (event) {
   if (event.defaultPrevented)
     return;
+  if (game.over) {
+    game.restart();
+    game.over = false;
+  } else {
 
-  switch (event.code) {
-    case "ArrowRight":
-      tetromino.moveRight();
-      break;
-    case "ArrowLeft":
-      tetromino.moveLeft();
-      break;
-    case "ArrowDown":
-      if (!tetromino.moveDown()) {
-        tetromino = new Tetromino();
-      }
-      break;
-    case "ArrowUp":
-      tetromino.rotate();
-      break;
-  }
+    switch (event.code) {
+      case "ArrowRight":
+        game.tetromino.moveRight();
+        break;
+      case "ArrowLeft":
+        game.tetromino.moveLeft();
+        break;
+      case "ArrowDown":
+        game.moveDown(); // additional logic for moving down 
+        break;
+      case "ArrowUp":
+        game.tetromino.rotate();
+        break;
+    }
+  } 
 
-  draw(grid, tetromino);
+  game.draw();
   event.preventDefault();
 }, true);
 
-window.setInterval(function () {
-  if (!tetromino.moveDown())
-    tetromino = new Tetromino();
-  draw(grid, tetromino);
+window.setTimeout(function timeout () {
+  game.moveDown();
+  if (!game.over)
+    window.setTimeout(timeout, 1000);
+  game.draw();
 }, 1000);
 
-draw(grid, tetromino);
+game.draw();

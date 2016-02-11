@@ -2,6 +2,11 @@ var Brick = require("./brick.js");
 var grid = {};
 grid.bricks = [];
 
+grid.obstructed = function (position) {
+  return this.bricks.some(function (brick) {
+    return brick.position.x == position.x && brick.position.y == position.y;
+  });
+};
 grid.getRow = function (id) {
   return this.bricks.filter(function (brick) {
     if (brick.position.y == id)
@@ -30,5 +35,8 @@ grid.update = function () {
       this.moveDown(i);
     }
   }
+};
+grid.clear = function () {
+  this.bricks = new Array();
 };
 module.exports = grid;

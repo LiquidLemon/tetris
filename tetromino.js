@@ -98,6 +98,14 @@ function loader (grid) {
         break;
     }
 
+    if (this.bricks.some(function (brick) { 
+      var x = brick.position.x + this.position.x;
+      var y = brick.position.y + this.position.y;
+      return grid.obstructed({x: x, y: y}); 
+    }, this)) {
+      this.obstructed = true;
+    }
+    
     this.canMove = function (direction) {
       direction.x = direction.x | 0;
       direction.y = direction.y | 0;
