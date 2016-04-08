@@ -1,5 +1,3 @@
-require("./index.css");
-
 var game = require("./game.js");
 
 window.addEventListener("keydown", function (event) {
