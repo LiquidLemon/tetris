@@ -1,102 +1,56 @@
 var Brick = require("./brick.js");
 
 function loader (grid) {
-  var pool = ["o", "i", "t", "s", "z", "j", "l"];
-
+  var pool = [];
   function Tetromino () {
-    if (pool.length === 0)
-      pool = ["o", "i", "t", "s", "z", "j", "l"];
-
-    var type = pool[Math.floor(pool.length * Math.random())];
-    pool.splice(pool.indexOf(type), 1);
-
-    this.bricks = [];
-    switch (type) {
-      case "i":
-      case "I":
-        this.color = "cyan";
-        this.position = {x:3, y:0};
-        this.center = {x:1.5, y:0.5};
-        this.bricks.push(
-            new Brick({x:0, y:0}),
-            new Brick({x:1, y:0}),
-            new Brick({x:2, y:0}),
-            new Brick({x:3, y:0})
-        );
-        break;
-      case "o":
-      case "O":
-        this.color = "yellow";
-        this.position = {x:4, y:0};
-        this.center = {x: 0.5, y: 0.5};
-        this.bricks.push(
-            new Brick({x:0,y:0}),
-            new Brick({x:1,y:0}),
-            new Brick({x:0,y:1}),
-            new Brick({x:1,y:1})
-        );
-        break;
-      case "t":
-      case "T":
-        this.color = "purple";
-        this.position = {x:3, y:0};
-        this.center = {x:1,y:1};
-        this.bricks.push(
-            new Brick({x:1,y:0}),
-            new Brick({x:0,y:1}),
-            new Brick({x:1,y:1}),
-            new Brick({x:2,y:1})
-        );
-        break;
-      case "s":
-      case "S":
-        this.color = "green";
-        this.position = {x:3, y:0};
-        this.center = {x:1, y:1};
-        this.bricks.push(
-            new Brick({x:1,y:0}),
-            new Brick({x:2,y:0}),
-            new Brick({x:0,y:1}),
-            new Brick({x:1,y:1})
-        );
-        break;
-      case "z":
-      case "Z":
-        this.color = "red";
-        this.position = {x:3, y:0};
-        this.center = {x:1, y:1};
-        this.bricks.push(
-            new Brick({x:0,y:0}),
-            new Brick({x:1,y:0}),
-            new Brick({x:1,y:1}),
-            new Brick({x:2,y:1})
-        );
-        break;
-      case "j":
-      case "J":
-        this.color = "blue";
-        this.position = {x:3, y:0};
-        this.center = {x:1, y:1};
-        this.bricks.push(
-            new Brick({x:0,y:0}),
-            new Brick({x:0,y:1}),
-            new Brick({x:1,y:1}),
-            new Brick({x:2,y:1})
-        );
-        break;
-      case "l":
-      case "L":
-        this.color = "orange";
-        this.position = {x:3, y:0};
-        this.center = {x:1, y:1};
-        this.bricks.push(
-            new Brick({x:2, y:0}),
-            new Brick({x:0, y:1}),
-            new Brick({x:1, y:1}),
-            new Brick({x:2, y:1})
-        );
-        break;
+    if (pool.length === 0) {
+      pool = [
+        {
+          color: "cyan",
+          position: {x: 3, y: 0},
+          center: {x: 1.5, y: 0.5},
+          bricks: [new Brick(0,0), new Brick(1,0), new Brick(2,0), new Brick(3,0)]
+        }, {
+          color: "yellow",
+          position: {x: 4, y: 0},
+          center: {x: 0.5, y: 0.5},
+          bricks: [new Brick(0,0), new Brick(1,0), new Brick(0,1), new Brick(1,1)] 
+        }, {
+          color: "purple",
+          position: {x: 3, y: 0},
+          center: {x: 1, y: 1},
+          bricks: [new Brick(1,0), new Brick(0,1), new Brick(1,1), new Brick(2,1)]
+        }, {
+          color: "green",
+          position: {x: 3, y: 0},
+          center: {x: 1, y: 1},
+          bricks: [new Brick(1,0), new Brick(2,0), new Brick(0,1), new Brick(1,1)]
+        }, {
+          color: "red",
+          position: {x: 3, y: 0},
+          center: {x: 1, y: 1},
+          bricks: [new Brick(0,0), new Brick(1,0), new Brick(1,1), new Brick(2,1)]
+        }, {
+          color: "blue",
+          position: {x: 3, y: 0},
+          center: {x: 1, y: 1},
+          bricks: [new Brick(0,0), new Brick(0,1), new Brick(1,1), new Brick(2,1)]
+        }, {
+          color: "orange",
+          position: {x: 3, y: 0},
+          center: {x: 1, y: 1},
+          bricks: [new Brick(2,0), new Brick(0,1), new Brick(1,1), new Brick(2,1)]
+        } 
+      ];
     }
+
+    var index = Math.floor(pool.length * Math.random()); 
+    var template = pool[index];
+    pool.splice(index, 1);
+
+    Object.keys(template).forEach(function (key) {
+      this[key] = template[key];
+    }, this);
 
     if (this.bricks.some(function (brick) { 
       var x = brick.position.x + this.position.x;
@@ -106,63 +60,40 @@ function loader (grid) {
       this.obstructed = true;
     }
     
-    this.canMove = function (direction) {
-      direction.x = direction.x | 0;
-      direction.y = direction.y | 0;
+    this.canMove = function (x, y) {
+      var direction = {};
+      direction.x = x | 0;
+      direction.y = y | 0;
       for (var i = 0; i < 4; ++i) {
         var x = this.position.x + this.bricks[i].position.x + direction.x;
         var y = this.position.y + this.bricks[i].position.y + direction.y;
-        //check if in bounds
-        if (x > 9 || x < 0 || y > 21 || y < 0)
-          return false;
-        //check if not obstructed
-        if (grid.bricks.some(function (brick) {return brick.position.x == x && brick.position.y == y}))
+
+        if (grid.obstructed({x: x, y: y}))
           return false;
       }
       return true;
     };
 
-    this.moveRight = function () {
-      if (this.canMove({x: 1}))
-        this.position.x += 1;
-    };
-
-    this.moveLeft = function () {
-      if (this.canMove({x: -1}))
-        this.position.x -= 1;
-    };
-
-    this.moveDown = function () {
-      if (this.canMove({y: 1})) {
-        this.position.y += 1;
+    this.move = function (x, y) {
+      if(this.canMove(x, y)) {
+        this.position.x += x;
+        this.position.y += y;
+        return true;
       } else {
-        this.fill();
         return false;
-      }
-      return true;
-    };
-
-    this.fill = function () {
-      for (var i = 0; i < 4; ++i) {
-        var x = this.position.x + this.bricks[i].position.x;
-        var y = this.position.y + this.bricks[i].position.y;
-        grid.bricks.push(new Brick({x:x,y:y}, this.color));
       }
     };
 
     this.rotate = function () {
       var new_bricks = [];
       this.bricks.forEach(function (brick) {
-        new_bricks.push(new Brick({x: -brick.position.y + this.center.y + this.center.x, y: brick.position.x - this.center.x + this.center.y})); // maths!
+        new_bricks.push(new Brick(-brick.position.y + this.center.y + this.center.x, brick.position.x - this.center.x + this.center.y)); // maths!
       }, this);
       var obstructed;
       new_bricks.forEach(function (brick) {
         var x = brick.position.x + this.position.x;
         var y = brick.position.y + this.position.y;
-        if (x > 9 || x < 0 || y > 21 || y < 0)
-          obstructed = true;
-        if (grid.bricks.some(function (brick) {return brick.position.x == x && brick.position.y == y}))
-          obstructed = true;
+        obstructed = grid.obstructed({x: x, y: y});
       }, this);
       if (!obstructed) {
         this.bricks = new_bricks;

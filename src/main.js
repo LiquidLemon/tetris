@@ -10,13 +10,13 @@ window.addEventListener("keydown", function (event) {
 
     switch (event.code) {
       case "ArrowRight":
-        game.tetromino.moveRight();
+        game.move(1,0);
         break;
       case "ArrowLeft":
-        game.tetromino.moveLeft();
+        game.move(-1,0);
         break;
       case "ArrowDown":
-        game.moveDown(); // additional logic for moving down 
+        game.move(0,1);
         break;
       case "ArrowUp":
         game.tetromino.rotate();

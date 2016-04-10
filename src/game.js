@@ -1,3 +1,4 @@
+var Brick = require("./brick.js");
 var game = {};
 
 game.grid = require("./grid.js");
@@ -10,13 +11,22 @@ if (game.canvas.getContext) {
   game.context.textAlign = "center";
 }
 
-game.moveDown = function () {
-  if (!this.tetromino.moveDown()) {
-    this.score += Math.pow(this.grid.update(), 2);
-    this.tetromino = new Tetromino();
-    if (this.tetromino.obstructed) {
-      this.over = true;
+game.move = function (x, y) {
+  if (y === 1) {
+    if (!this.tetromino.move(0, 1)) {
+      this.tetromino.bricks.forEach(function (brick) {
+        var x = this.tetromino.position.x + brick.position.x;
+        var y = this.tetromino.position.y + brick.position.y;
+        this.grid.bricks.push(new Brick(x, y, this.tetromino.color));
+      }, this);
+      this.score += Math.pow(this.grid.update(), 2);
+      this.tetromino = new Tetromino();
+      if (this.tetromino.obstructed) {
+        this.over = true;
+      }
     }
+  } else {
+    this.tetromino.move(x, y);
   }
 };
 
@@ -44,6 +54,7 @@ game.draw = function () {
     }, this);
   }
 };
+
 game.getInterval = function () {
   return 1000 - this.score * 4;
 };
@@ -54,7 +65,7 @@ game.restart = function () {
   this.grid.clear();
   this.tetromino = new Tetromino();
   window.setTimeout(function step(game) {
-    game.moveDown();
+    game.move(0,1);
     if(!game.over) 
       window.setTimeout(step, game.getInterval(), game);
     game.draw();

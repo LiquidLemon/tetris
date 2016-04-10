@@ -1,11 +1,12 @@
-var Brick = require("./brick.js");
 var grid = {};
 grid.bricks = [];
 
 grid.obstructed = function (position) {
-  return this.bricks.some(function (brick) {
+  var isTaken = this.bricks.some(function (brick) {
     return brick.position.x == position.x && brick.position.y == position.y;
   });
+  var isOutOfBounds = position.x > 9 || position.x < 0 || position.y > 21 || position.y < 0;
+  return isTaken || isOutOfBounds;
 };
 grid.getRow = function (id) {
   return this.bricks.filter(function (brick) {
@@ -22,7 +23,7 @@ grid.removeRow = function (id) {
     return true;
   });
 };
-grid.moveDown = function (rowsAmount) {
+grid.collapse = function (rowsAmount) {
   this.bricks.forEach(function (brick) {
     if (brick.position.y < rowsAmount)
       ++brick.position.y;
@@ -34,7 +35,7 @@ grid.update = function () {
     if (this.getRow(i).length == 10) {
       ++removedRows;
       this.removeRow(i);
-      this.moveDown(i);
+      this.collapse(i);
     }
   }
   return removedRows;
